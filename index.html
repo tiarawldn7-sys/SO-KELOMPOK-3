@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deadlock Simulator — Sistem Operasi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar" id="sidebar">
+    <a class="brand" href="#" data-page="dashboard">
+      <span class="brand-mark"><i class="fa-mark">⌘</i></span>
+      <span><strong>Deadlock</strong><small>SIMULATOR</small></span>
+    </a>
+    <div class="side-label">MENU UTAMA</div>
+    <nav class="nav-menu">
+      <button class="nav-link active" data-page="dashboard"><span class="nav-icon">▦</span>Dashboard</button>
+      <button class="nav-link" data-page="input"><span class="nav-icon">▤</span>Input Data</button>
+      <button class="nav-link" data-page="prevention"><span class="nav-icon">⬡</span>Prevention</button>
+      <button class="nav-link" data-page="avoidance"><span class="nav-icon">◇</span>Avoidance</button>
+      <button class="nav-link" data-page="detection"><span class="nav-icon">⌕</span>Detection</button>
+      <button class="nav-link" data-page="comparison"><span class="nav-icon">▥</span>Comparison</button>
+    </nav>
+    <div class="sidebar-bottom">
+      <div class="help-icon">i</div>
+      <div><strong>Butuh bantuan?</strong><small>Pelajari konsep deadlock<br>di bagian informasi.</small></div>
+    </div>
+    <div class="side-version">SISTEM OPERASI · PROJECT 01</div>
+  </aside>
+
+  <main class="main-area">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="mobile-menu" id="mobileMenu" aria-label="Buka menu">☰</button>
+        <div><span class="breadcrumb">Workspace <b>/</b> <strong id="crumb">Dashboard</strong></span><h1 id="pageTitle">Dashboard</h1></div>
+      </div>
+      <div class="topbar-right">
+        <span class="status-dot"></span><span class="live-label">Simulator siap</span>
+        <button class="avatar" title="Kelompok proyek">SO</button>
+      </div>
+    </header>
+
+    <div class="content">
+      <section class="page active" id="page-dashboard">
+        <div class="welcome-row">
+          <div><p class="eyebrow">OVERVIEW SISTEM</p><h2>Selamat datang di <span>Deadlock Simulator.</span></h2><p class="muted">Pahami, simulasikan, dan bandingkan strategi pengelolaan resource pada sistem operasi.</p></div>
+          <button class="primary-btn" data-goto="input">Mulai simulasi <span>→</span></button>
+        </div>
+        <div class="stat-grid">
+          <article class="stat-card"><div class="stat-top"><span>Total proses</span><span class="stat-icon blue">▤</span></div><strong id="statProcesses">5</strong><small>Proses dalam simulasi</small></article>
+          <article class="stat-card"><div class="stat-top"><span>Jenis resource</span><span class="stat-icon lilac">◈</span></div><strong id="statResources">3</strong><small>Resource tersedia</small></article>
+          <article class="stat-card"><div class="stat-top"><span>Resource tersedia</span><span class="stat-icon mint">⌁</span></div><strong id="statAvailable">3</strong><small>Total unit yang belum dialokasikan</small></article>
+          <article class="stat-card"><div class="stat-top"><span>Status sistem</span><span class="stat-icon peach">✓</span></div><strong class="status-text" id="statStatus">Aman</strong><small id="statStatusNote">Berdasarkan pemeriksaan awal</small></article>
+        </div>
+        <div class="dashboard-grid">
+          <article class="panel overview-panel">
+            <div class="panel-heading"><div><p class="eyebrow">PENGENALAN</p><h3>Kenali tiga metode simulasi</h3></div><span class="soft-tag">3 metode</span></div>
+            <div class="method-list">
+              <button class="method-row" data-goto="prevention"><span class="method-symbol symbol-blue">⬡</span><span><b>Deadlock Prevention</b><small>Mencegah deadlock dengan memutus salah satu kondisi penyebabnya.</small></span><span class="row-arrow">↗</span></button>
+              <button class="method-row" data-goto="avoidance"><span class="method-symbol symbol-mint">◇</span><span><b>Deadlock Avoidance</b><small>Memeriksa keamanan sistem sebelum resource dialokasikan.</small></span><span class="row-arrow">↗</span></button>
+              <button class="method-row" data-goto="detection"><span class="method-symbol symbol-peach">⌕</span><span><b>Deadlock Detection</b><small>Mencari proses yang terjebak setelah resource dialokasikan.</small></span><span class="row-arrow">↗</span></button>
+            </div>
+          </article>
+          <article class="panel info-panel">
+            <div class="panel-heading"><div><p class="eyebrow">INFORMASI SINGKAT</p><h3>Apa itu deadlock?</h3></div><span class="info-bubble">i</span></div>
+            <p class="info-copy">Deadlock adalah kondisi ketika dua atau lebih proses saling menunggu resource yang sedang dipegang proses lain, sehingga tidak ada proses yang dapat melanjutkan pekerjaannya.</p>
+            <div class="info-divider"></div>
+            <div class="info-note"><span>✦</span><div><b>Tujuan simulasi</b><small>Memahami perbedaan pencegahan, penghindaran, dan pendeteksian deadlock melalui data yang dapat diubah.</small></div></div>
+          </article>
+        </div>
+        <div class="bottom-grid">
+          <article class="panel chart-panel"><div class="panel-heading"><div><p class="eyebrow">ALUR KERJA</p><h3>Bagaimana simulator bekerja?</h3></div></div><div class="flow-steps"><div><span>01</span><b>Input data</b><small>Atur proses dan resource</small></div><i>→</i><div><span>02</span><b>Jalankan metode</b><small>Pilih strategi simulasi</small></div><i>→</i><div><span>03</span><b>Lihat hasil</b><small>Analisis hasilnya</small></div></div></article>
+          <article class="panel quick-panel"><p class="eyebrow">AKSES CEPAT</p><h3>Siap mencoba?</h3><p class="muted">Gunakan data contoh atau masukkan skenario sendiri.</p><button class="secondary-btn full" data-goto="input">Atur data simulasi <span>→</span></button></article>
+        </div>
+      </section>
+
+      <section class="page" id="page-input">
+        <div class="page-intro"><p class="eyebrow">KONFIGURASI SIMULASI</p><h2>Input proses & resource</h2><p class="muted">Ubah data alokasi, kebutuhan maksimum, dan permintaan resource untuk mencoba skenario sendiri.</p></div>
+        <div class="panel input-toolbar"><div><b>Data contoh</b><small>Gunakan skenario bawaan untuk mulai mencoba.</small></div><button class="secondary-btn" id="resetData">Pulihkan data contoh</button></div>
+        <div class="panel data-panel">
+          <div class="panel-heading"><div><p class="eyebrow">RESOURCE</p><h3>Total unit resource</h3></div><span class="soft-tag">Bisa diedit</span></div>
+          <div id="totalInputs" class="resource-inputs"></div>
+        </div>
+        <div class="panel data-panel">
+          <div class="panel-heading"><div><p class="eyebrow">PROCESS</p><h3>Matriks proses</h3></div><div class="table-legend"><span><i class="dot dot-blue"></i> Allocation</span><span><i class="dot dot-mint"></i> Maximum</span><span><i class="dot dot-peach"></i> Request</span></div></div>
+          <div class="table-wrap"><table id="processTable"></table></div>
+          <div class="table-help">Allocation = resource yang sedang dipegang. Maximum = kebutuhan maksimum. Request = tambahan resource yang sedang diminta.</div>
+        </div>
+        <div class="action-row"><span id="inputFeedback" class="muted">Perubahan data diterapkan ke seluruh metode simulasi.</span><button class="primary-btn" id="applyData">Terapkan data <span>→</span></button></div>
+      </section>
+
+      <section class="page" id="page-prevention">
+        <div class="page-intro"><p class="eyebrow">METODE 01</p><h2>Deadlock Prevention</h2><p class="muted">Pencegahan dilakukan dengan memastikan setidaknya satu dari empat kondisi deadlock tidak terpenuhi.</p></div>
+        <div class="two-col">
+          <article class="panel"><p class="eyebrow">KONDISI DEADLOCK</p><h3>Empat kondisi Coffman</h3><div class="condition-list"><div><span>01</span><b>Mutual exclusion</b><small>Resource hanya dapat digunakan satu proses pada satu waktu.</small></div><div><span>02</span><b>Hold and wait</b><small>Proses menahan resource sambil menunggu resource lain.</small></div><div><span>03</span><b>No preemption</b><small>Resource tidak dapat diambil paksa dari proses.</small></div><div><span>04</span><b>Circular wait</b><small>Terbentuk rantai proses yang saling menunggu secara melingkar.</small></div></div></article>
+          <article class="panel"><p class="eyebrow">SIMULASI PENCEGAHAN</p><h3>Terapkan aturan urutan resource</h3><p class="muted">Salah satu cara mencegah circular wait adalah mewajibkan proses meminta resource berdasarkan urutan yang konsisten.</p><label class="field-label">Urutan resource yang diwajibkan</label><div id="orderInputs" class="order-inputs"></div><div class="callout">Contoh: proses harus meminta A sebelum B, dan B sebelum C. Proses tidak boleh meminta resource dengan urutan lebih rendah setelah memegang urutan lebih tinggi.</div><button class="primary-btn full" id="runPrevention">Jalankan pencegahan</button><div id="preventionResult" class="result-box empty">Jalankan simulasi untuk melihat hasil pemeriksaan aturan.</div></article>
+        </div>
+      </section>
+
+      <section class="page" id="page-avoidance">
+        <div class="page-intro"><p class="eyebrow">METODE 02</p><h2>Deadlock Avoidance</h2><p class="muted">Banker's Algorithm memeriksa apakah sistem masih memiliki urutan penyelesaian yang aman sebelum memberikan resource.</p></div>
+        <div class="panel"><div class="panel-heading"><div><p class="eyebrow">BANKER'S ALGORITHM</p><h3>Ringkasan resource</h3></div><button class="primary-btn" id="runAvoidance">Jalankan algoritma <span>→</span></button></div><div id="bankerSummary" class="banker-summary"></div><div class="table-wrap"><table id="needTable"></table></div><div id="avoidanceResult" class="result-box empty">Klik “Jalankan algoritma” untuk memeriksa safe sequence.</div></div>
+      </section>
+
+      <section class="page" id="page-detection">
+        <div class="page-intro"><p class="eyebrow">METODE 03</p><h2>Deadlock Detection</h2><p class="muted">Periksa apakah ada proses yang tidak dapat diselesaikan karena resource yang diminta belum tersedia.</p></div>
+        <div class="panel"><div class="panel-heading"><div><p class="eyebrow">DETECTION ALGORITHM</p><h3>Data allocation & request</h3></div><button class="primary-btn" id="runDetection">Deteksi deadlock <span>→</span></button></div><div class="table-wrap"><table id="detectionTable"></table></div><div id="detectionResult" class="result-box empty">Jalankan deteksi untuk mengetahui proses yang terjebak.</div></div>
+      </section>
+
+      <section class="page" id="page-comparison">
+        <div class="page-intro"><p class="eyebrow">ANALISIS HASIL</p><h2>Comparison</h2><p class="muted">Bandingkan tujuan, cara kerja, dan hasil dari tiga pendekatan pengelolaan deadlock.</p></div>
+        <div class="panel"><div class="panel-heading"><div><p class="eyebrow">PERBANDINGAN METODE</p><h3>Ringkasan pendekatan</h3></div><button class="secondary-btn" id="refreshComparison">Perbarui hasil ↻</button></div><div class="comparison-grid"><div class="compare-card compare-blue"><span>01 · PREVENTION</span><h3>Pencegahan</h3><p>Merancang aturan agar salah satu kondisi penyebab deadlock tidak dapat terjadi.</p><b id="comparePrevention">Belum dijalankan</b></div><div class="compare-card compare-mint"><span>02 · AVOIDANCE</span><h3>Penghindaran</h3><p>Memeriksa safe state sebelum menyetujui permintaan resource.</p><b id="compareAvoidance">Belum dijalankan</b></div><div class="compare-card compare-peach"><span>03 · DETECTION</span><h3>Deteksi</h3><p>Memeriksa kondisi alokasi dan permintaan untuk menemukan deadlock.</p><b id="compareDetection">Belum dijalankan</b></div></div><div class="comparison-table-wrap"><table><thead><tr><th>Aspek</th><th>Prevention</th><th>Avoidance</th><th>Detection</th></tr></thead><tbody><tr><td>Waktu tindakan</td><td>Sebelum alokasi</td><td>Sebelum alokasi</td><td>Setelah alokasi</td></tr><tr><td>Fokus</td><td>Membatasi kondisi</td><td>Menjaga safe state</td><td>Menemukan deadlock</td></tr><tr><td>Contoh pendekatan</td><td>Resource ordering</td><td>Banker's Algorithm</td><td>Detection algorithm</td></tr><tr><td>Hasil utama</td><td>Aturan pencegahan</td><td>Safe / unsafe</td><td>Deadlock / tidak</td></tr></tbody></table></div></div>
+      </section>
+    </div>
+    <footer class="footer"><span>DEADLOCK SIMULATOR</span><span>Sistem Operasi <i>•</i> Kelompok Project</span><span>© 2026</span></footer>
+  </main>
+</div>
+<script src="script.js"></script>
+</body>
+</html>
