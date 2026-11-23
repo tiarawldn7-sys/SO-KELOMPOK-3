@@ -1,23 +1,37 @@
 const initialData = {
-  resources: ["A", "B", "C"],
-  total: [10, 5, 7],
-  processes: [
-    {name:"P1", allocation:[0,1,0], max:[7,5,3], request:[0,0,0]},
-    {name:"P2", allocation:[2,0,0], max:[3,2,2], request:[0,0,0]},
-    {name:"P3", allocation:[3,0,2], max:[9,0,2], request:[0,0,0]},
-    {name:"P4", allocation:[2,1,1], max:[2,2,2], request:[0,0,0]},
-    {name:"P5", allocation:[0,0,2], max:[4,3,3], request:[0,0,0]}
-  ]
+    resources: ["A", "B", "C"],
+    total: [10, 5, 7],
+    processes: [
+        {
+            name: "P0",
+            allocation: [0, 0, 0],
+            max: [0, 0, 0],
+            request: [0, 0, 0]
+        }
+    ]
 };
 let data = structuredClone(initialData);
-let results = {prevention:null, avoidance:null, detection:null};
-let resourceOrder = [...data.resources];
+let results = {
+    prevention: null,
+    avoidance: null,
+    detection: null
+};
+let resourceOrder = [1, 2, 3];
 const $ = s => document.querySelector(s);
 const $$ = s => [...document.querySelectorAll(s)];
-const sum = arr => arr.reduce((a,b)=>a+b,0);
-const available = () => data.total.map((v,j)=>v-data.processes.reduce((s,p)=>s+p.allocation[j],0));
-const fmt = a => `[${a.join(", ")}]`;
-function notify(msg){const el=$('#inputFeedback');if(el)el.textContent=msg}
+
+const sum = arr => arr.reduce((a, b) => a + b, 0);
+
+const available = () =>
+    data.total.map((v, j) =>
+        v - data.processes.reduce(
+            (s, p) => s + p.allocation[j], 0
+        )
+    );
+
+function notify(msg) {
+    $('#inputFeedback').textContent = msg;
+}
 function renderStats(){
   $('#statProcesses').textContent=data.processes.length;
   $('#statResources').textContent=data.resources.length;
@@ -33,14 +47,274 @@ function renderOrderControls(){
       ${data.resources.map((_,rank)=>`<option value="${rank+1}" ${resourceOrder[i]===rank+1?'selected':''}>${rank+1}</option>`).join('')}
     </select></label>`).join('');
 }
-function renderInput(){
-  $('#totalInputs').innerHTML=data.resources.map((r,j)=>`<div class="resource-field"><label>Resource ${r}</label><input type="number" min="0" step="1" data-total="${j}" value="${data.total[j]}"></div>`).join('');
-  const n=data.resources.length;
-  let head=`<thead><tr><th rowspan="2">Process</th><th class="group-head" colspan="${n}">Allocation</th><th class="group-head" colspan="${n}">Maximum</th><th class="group-head" colspan="${n}">Request</th></tr><tr>${[0,1,2].map(()=>data.resources.map(r=>`<th>${r}</th>`).join('')).join('')}</tr></thead>`;
-  let body='<tbody>'+data.processes.map((p,i)=>`<tr><td>${p.name}</td>${['allocation','max','request'].map(k=>p[k].map((v,j)=>`<td><input class="cell-input" type="number" min="0" step="1" data-row="${i}" data-kind="${k}" data-col="${j}" value="${v}"></td>`).join('')).join('')}</tr>`).join('')+'</tbody>';
-  $('#processTable').innerHTML=head+body;
-  renderOrderControls();renderNeedTable();renderDetectionTable();renderStats();
+function renderInput() {
+
+    $('#processCount').textContent = data.processes.length;
+    $('#resourceCount').textContent = data.resources.length;
+
+    // RESOURCE INPUT
+    $('#totalInputs').innerHTML = data.resources.map((r, j) => `
+        <div class="resource-field">
+            <label>
+                <input
+                    type="text"
+                    class="resource-name"
+                    data-resource-name="${j}"
+                    value="${r}"
+                    maxlength="8"
+                    aria-label="Nama resource ${j + 1}"
+                >
+            </label>
+
+            <input
+                type="number"
+                min="0"
+                data-total="${j}"
+                value="${data.total[j]}"
+                aria-label="Total resource ${r}"
+            >
+        </div>
+    `).join('');
+
+    const n = data.resources.length;
+
+    // TABLE HEADER
+    const head = `
+        <thead>
+            <tr>
+                <th rowspan="2">Process</th>
+
+                <th class="group-head" colspan="${n}">
+                    Allocation
+                </th>
+
+                <th class="group-head" colspan="${n}">
+                    Maximum
+                </th>
+
+                <th class="group-head" colspan="${n}">
+                    Request
+                </th>
+
+                <th rowspan="2">Aksi</th>
+            </tr>
+
+            <tr>
+                ${[0, 1, 2].map(() =>
+                    data.resources.map(r => `
+                        <th>${escapeHTML(r)}</th>
+                    `).join('')
+                ).join('')}
+            </tr>
+        </thead>
+    `;
+
+    // TABLE BODY
+    const body = `
+        <tbody>
+            ${data.processes.map((p, i) => `
+                <tr>
+                    <td>
+                        <input
+                            type="text"
+                            class="cell-input process-name"
+                            data-process-name="${i}"
+                            value="${escapeHTML(p.name)}"
+                            maxlength="10"
+                            aria-label="Nama proses"
+                        >
+                    </td>
+
+                    ${['allocation', 'max', 'request'].map(k =>
+                        p[k].map((v, j) => `
+                            <td>
+                                <input
+                                    class="cell-input"
+                                    type="number"
+                                    min="0"
+                                    data-row="${i}"
+                                    data-kind="${k}"
+                                    data-col="${j}"
+                                    value="${v}"
+                                >
+                            </td>
+                        `).join('')
+                    ).join('')}
+
+                    <td>
+                        <button
+                            type="button"
+                            class="delete-row-btn"
+                            data-delete-process="${i}"
+                            ${data.processes.length <= 1 ? 'disabled' : ''}
+                        >
+                            Hapus
+                        </button>
+                    </td>
+                </tr>
+            `).join('')}
+        </tbody>
+    `;
+
+    $('#processTable').innerHTML = head + body;
+
+    $('#orderInputs').innerHTML = data.resources.map((r, i) => `
+        <span class="order-chip">
+            ${i + 1}. ${escapeHTML(r)}
+        </span>
+    `).join('');
+
+    renderNeedTable();
+    renderDetectionTable();
+    renderStats();
 }
+function escapeHTML(value) {
+    return String(value).replace(/[&<>"']/g, char => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+    })[char]);
+}
+function addProcess() {
+
+    if (data.processes.length >= 30) {
+        notify('Maksimal 30 proses.');
+        return;
+    }
+
+    const nextNumber = data.processes.length;
+
+    data.processes.push({
+        name: `P${nextNumber}`,
+        allocation: data.resources.map(() => 0),
+        max: data.resources.map(() => 0),
+        request: data.resources.map(() => 0)
+    });
+
+    resetResults();
+    renderInput();
+
+    notify('Proses baru berhasil ditambahkan.');
+}
+function addResource() {
+    let suffix = data.resources.length + 1;
+    let name = `R${suffix}`;
+
+    while (data.resources.some(resource => resource.toLowerCase() === name.toLowerCase())) {
+        suffix += 1;
+        name = `R${suffix}`;
+    }
+
+    data.resources.push(name);
+    data.total.push(0);
+    data.processes.forEach(process => {
+        process.allocation.push(0);
+        process.max.push(0);
+        process.request.push(0);
+    });
+    resourceOrder.push(resourceOrder.length + 1);
+
+    resetResults();
+    renderInput();
+    notify('Resource baru berhasil ditambahkan.');
+}
+function removeResource() {
+    if (data.resources.length <= 1) {
+        notify('Minimal harus ada satu resource.');
+        return;
+    }
+
+    data.resources.pop();
+    data.total.pop();
+    data.processes.forEach(process => {
+        process.allocation.pop();
+        process.max.pop();
+        process.request.pop();
+    });
+    resourceOrder.pop();
+
+    resetResults();
+    renderInput();
+    notify('Resource terakhir berhasil dihapus.');
+}
+function removeProcess(index) {
+
+    if (data.processes.length <= 1) {
+        notify('Minimal harus ada satu proses.');
+        return;
+    }
+
+    data.processes.splice(index, 1);
+
+    // Penamaan ulang proses
+    data.processes.forEach((p, i) => {
+        p.name = `P${i}`;
+    });
+
+    resetResults();
+    renderInput();
+
+    notify('Proses berhasil dihapus.');
+}
+function editResourceName(index, value) {
+
+    const name = value.trim();
+
+    if (!name) {
+        notify('Nama resource tidak boleh kosong.');
+        renderInput();
+        return;
+    }
+
+    const duplicate = data.resources.some(
+        (r, i) => i !== index &&
+        r.toLowerCase() === name.toLowerCase()
+    );
+
+    if (duplicate) {
+        notify('Nama resource tidak boleh sama.');
+        renderInput();
+        return;
+    }
+
+    data.resources[index] = name;
+
+    resetResults();
+    renderInput();
+
+    notify('Nama resource berhasil diperbarui.');
+}
+function editProcessName(index, value) {
+
+    const name = value.trim();
+
+    if (!name) {
+        notify('Nama proses tidak boleh kosong.');
+        renderInput();
+        return;
+    }
+
+    const duplicate = data.processes.some(
+        (p, i) => i !== index &&
+        p.name.toLowerCase() === name.toLowerCase()
+    );
+
+    if (duplicate) {
+        notify('Nama proses tidak boleh sama.');
+        renderInput();
+        return;
+    }
+
+    data.processes[index].name = name;
+
+    resetResults();
+    renderInput();
+
+    notify('Nama proses berhasil diperbarui.');
+}
+
 function renderNeedTable(){
   const av=available();
   const head=`<thead><tr><th>Process</th>${data.resources.map(r=>`<th>Need ${r}</th>`).join('')}</tr></thead>`;
@@ -149,15 +423,84 @@ function updateComparison(){
   $('#compareAvoidance').textContent=results.avoidance?(results.avoidance.error?'Data tidak valid':results.avoidance.safe?'Safe state':'Unsafe state'):'Belum dijalankan';
   $('#compareDetection').textContent=results.detection?(results.detection.error?'Data tidak valid':results.detection.deadlocked.length?'Proses tidak selesai':'Tidak ada deadlock'):'Belum dijalankan';
 }
-function resetResults(){
-  results={prevention:null,avoidance:null,detection:null};
-  ['#preventionResult','#avoidanceResult','#detectionResult'].forEach(s=>showResult(s,'Jalankan simulasi untuk melihat hasil.','empty'));
-  updateComparison();
+function resetResults() {
+
+    results = {
+        prevention: null,
+        avoidance: null,
+        detection: null
+    };
+
+    if ($('#preventionResult')) {
+        showResult(
+            '#preventionResult',
+            'Jalankan simulasi untuk melihat hasil.',
+            'empty'
+        );
+
+        showResult(
+            '#avoidanceResult',
+            'Jalankan simulasi untuk melihat hasil.',
+            'empty'
+        );
+
+        showResult(
+            '#detectionResult',
+            'Jalankan simulasi untuk melihat hasil.',
+            'empty'
+        );
+    }
+
+    if ($('#comparePrevention')) {
+        updateComparison();
+    }
 }
-function applyInputs(){
-  $$('[data-total]').forEach(el=>data.total[+el.dataset.total]=Math.max(0,Number(el.value)||0));
-  $$('.cell-input').forEach(el=>{const p=data.processes[+el.dataset.row];p[el.dataset.kind][+el.dataset.col]=Math.max(0,Number(el.value)||0)});
-  resetResults();renderInput();notify('Data berhasil diterapkan. Jalankan kembali setiap metode untuk melihat trace terbaru.');
+
+function applyInputs() {
+
+    // Simpan total resource
+    $$('[data-total]').forEach(el => {
+        data.total[+el.dataset.total] =
+            Math.max(0, Number(el.value) || 0);
+    });
+
+    // Simpan allocation, maximum, request
+    $$('.cell-input[data-row]').forEach(el => {
+
+        const row = +el.dataset.row;
+        const col = +el.dataset.col;
+        const kind = el.dataset.kind;
+
+        data.processes[row][kind][col] =
+            Math.max(0, Number(el.value) || 0);
+    });
+
+    // Simpan nama proses
+    $$('[data-process-name]').forEach(el => {
+        const index = +el.dataset.processName;
+        data.processes[index].name = el.value.trim();
+    });
+
+    // Validasi nama proses
+    const processNames = data.processes.map(
+        p => p.name.toLowerCase()
+    );
+
+    if (
+        processNames.some(name => !name) ||
+        new Set(processNames).size !== processNames.length
+    ) {
+        notify('Nama proses harus diisi dan tidak boleh sama.');
+        renderInput();
+        return;
+    }
+
+    resetResults();
+    renderInput();
+
+    notify(
+        'Data berhasil diterapkan. Jalankan kembali metode simulasi.'
+    );
 }
 function go(page){
   $$('.page').forEach(p=>p.classList.toggle('active',p.id===`page-${page}`));
@@ -171,6 +514,92 @@ document.addEventListener('click',e=>{
   const nav=e.target.closest('[data-page]');if(nav){e.preventDefault();go(nav.dataset.page)}
   const jump=e.target.closest('[data-goto]');if(jump)go(jump.dataset.goto);
 });
+$('#addProcess').addEventListener('click', addProcess);
+$('#removeProcess').addEventListener('click', () => {
+    removeProcess(data.processes.length - 1);
+});
+$('#addResource').addEventListener('click', addResource);
+
+$('#removeResource').addEventListener('click', removeResource);
+
+// Hapus proses melalui tombol pada tabel
+$('#processTable').addEventListener('click', e => {
+
+    const button = e.target.closest('[data-delete-process]');
+
+    if (!button) return;
+
+    removeProcess(+button.dataset.deleteProcess);
+});
+
+// Edit nama resource
+$('#totalInputs').addEventListener('change', e => {
+
+    if (e.target.matches('[data-resource-name]')) {
+
+        editResourceName(
+            +e.target.dataset.resourceName,
+            e.target.value
+        );
+    }
+});
+
+// Edit nama proses
+$('#processTable').addEventListener('change', e => {
+
+    if (e.target.matches('[data-process-name]')) {
+
+        editProcessName(
+            +e.target.dataset.processName,
+            e.target.value
+        );
+    }
+});
+
+$('#totalInputs').addEventListener('change', e => {
+    if (e.target.matches('[data-resource-name]')) {
+        const index = +e.target.dataset.resourceName;
+        const value = e.target.value.trim();
+
+        const duplicate = data.resources.some(
+            (r, i) => i !== index &&
+            r.toLowerCase() === value.toLowerCase()
+        );
+
+        if (!value || duplicate) {
+            notify('Nama resource kosong atau sudah digunakan.');
+            renderInput();
+            return;
+        }
+
+        data.resources[index] = value;
+        resetResults();
+        renderInput();
+    }
+});
+
+$('#processTable').addEventListener('change', e => {
+    if (e.target.matches('[data-process-name]')) {
+        const index = +e.target.dataset.processName;
+        const value = e.target.value.trim();
+
+        const duplicate = data.processes.some(
+            (p, i) => i !== index &&
+            p.name.toLowerCase() === value.toLowerCase()
+        );
+
+        if (!value || duplicate) {
+            notify('Nama proses kosong atau sudah digunakan.');
+            renderInput();
+            return;
+        }
+
+        data.processes[index].name = value;
+        resetResults();
+        renderInput();
+    }
+});
+
 $('#mobileMenu').addEventListener('click',()=>$('#sidebar').classList.toggle('open'));
 $('#resetData').addEventListener('click',()=>{data=structuredClone(initialData);resourceOrder=[1,2,3];resetResults();renderInput();notify('Data contoh berhasil dipulihkan.');});
 $('#applyData').addEventListener('click',applyInputs);

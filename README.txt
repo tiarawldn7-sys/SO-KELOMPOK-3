@@ -28,3 +28,7 @@ Website simulasi metode Deadlock Prevention, Avoidance, dan Detection.
 - `script.js` : navigasi dan algoritma simulasi
 
 Font Google dan Chart.js tidak wajib untuk fungsi inti; tampilan menggunakan font fallback jika internet tidak tersedia.
+
+
+revisi: 
+- halaman input data, diawali dengan tabel kosong dan bisa custom jumlah kolom dan baris pada tabel

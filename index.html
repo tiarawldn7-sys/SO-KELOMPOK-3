@@ -80,19 +80,99 @@
       </section>
 
       <section class="page" id="page-input">
-        <div class="page-intro"><p class="eyebrow">KONFIGURASI SIMULASI</p><h2>Input proses & resource</h2><p class="muted">Ubah data alokasi, kebutuhan maksimum, dan permintaan resource untuk mencoba skenario sendiri.</p></div>
-        <div class="panel input-toolbar"><div><b>Data contoh</b><small>Gunakan skenario bawaan untuk mulai mencoba.</small></div><button class="secondary-btn" id="resetData">Pulihkan data contoh</button></div>
-        <div class="panel data-panel">
-          <div class="panel-heading"><div><p class="eyebrow">RESOURCE</p><h3>Total unit resource</h3></div><span class="soft-tag">Bisa diedit</span></div>
-          <div id="totalInputs" class="resource-inputs"></div>
+  <div class="page-intro">
+    <p class="eyebrow">KONFIGURASI SIMULASI</p>
+    <h2>Input proses & resource</h2>
+    <p class="muted">
+      Atur jumlah proses, jumlah resource, nama kolom, dan nilai matriks secara mandiri.
+    </p>
+  </div>
+
+  <div class="panel input-toolbar">
+    <div>
+      <b>Pengaturan tabel</b>
+      <small>Tambahkan atau kurangi baris dan kolom sesuai kebutuhan.</small>
+    </div>
+    <button class="secondary-btn" id="resetData">
+      Reset tabel
+    </button>
+  </div>
+
+  <div class="panel data-panel">
+    <div class="panel-heading">
+      <div>
+        <p class="eyebrow">TABLE CONFIGURATION</p>
+        <h3>Ukuran tabel</h3>
+      </div>
+    </div>
+
+    <div class="table-controls">
+      <div class="control-group">
+        <label>Jumlah proses</label>
+        <div class="control-buttons">
+          <button type="button" id="removeProcess">−</button>
+          <span id="processCount">1</span>
+          <button type="button" id="addProcess">+</button>
         </div>
-        <div class="panel data-panel">
-          <div class="panel-heading"><div><p class="eyebrow">PROCESS</p><h3>Matriks proses</h3></div><div class="table-legend"><span><i class="dot dot-blue"></i> Allocation</span><span><i class="dot dot-mint"></i> Maximum</span><span><i class="dot dot-peach"></i> Request</span></div></div>
-          <div class="table-wrap"><table id="processTable"></table></div>
-          <div class="table-help">Allocation = resource yang sedang dipegang. Maximum = kebutuhan maksimum. Request = tambahan resource yang sedang diminta.</div>
+      </div>
+
+      <div class="control-group">
+        <label>Jumlah resource</label>
+        <div class="control-buttons">
+          <button type="button" id="removeResource">−</button>
+          <span id="resourceCount">3</span>
+          <button type="button" id="addResource">+</button>
         </div>
-        <div class="action-row"><span id="inputFeedback" class="muted">Perubahan data diterapkan ke seluruh metode simulasi.</span><button class="primary-btn" id="applyData">Terapkan data <span>→</span></button></div>
-      </section>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel data-panel">
+    <div class="panel-heading">
+      <div>
+        <p class="eyebrow">RESOURCE</p>
+        <h3>Pengaturan resource</h3>
+      </div>
+      <span class="soft-tag">Bisa diedit</span>
+    </div>
+
+    <div id="totalInputs" class="resource-inputs"></div>
+  </div>
+
+  <div class="panel data-panel">
+    <div class="panel-heading">
+      <div>
+        <p class="eyebrow">PROCESS</p>
+        <h3>Matriks proses</h3>
+      </div>
+      <div class="table-legend">
+        <span><i class="dot dot-blue"></i> Allocation</span>
+        <span><i class="dot dot-mint"></i> Maximum</span>
+        <span><i class="dot dot-peach"></i> Request</span>
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <table id="processTable"></table>
+    </div>
+
+    <div class="table-help">
+      Allocation = resource yang sedang dipegang.
+      Maximum = kebutuhan maksimum.
+      Request = tambahan resource yang sedang diminta.
+      Nama proses dan resource dapat diedit langsung.
+    </div>
+  </div>
+
+  <div class="action-row">
+    <span id="inputFeedback" class="muted">
+      Perubahan data diterapkan ke seluruh metode simulasi.
+    </span>
+    <button class="primary-btn" id="applyData">
+      Terapkan data →
+    </button>
+  </div>
+</section>
 
       <section class="page" id="page-prevention">
         <div class="page-intro"><p class="eyebrow">METODE 01</p><h2>Deadlock Prevention</h2><p class="muted">Pencegahan dilakukan dengan memastikan setidaknya satu dari empat kondisi deadlock tidak terpenuhi.</p></div>

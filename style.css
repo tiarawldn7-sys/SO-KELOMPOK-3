@@ -1119,3 +1119,113 @@ td:first-child {
         margin-left: 5px
     }
 }
+
+/* ==========================================
+   TABLE CUSTOMIZATION
+========================================== */
+
+.table-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 35px;
+    align-items: center;
+}
+
+.control-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.control-group label {
+    font-size: 11px;
+    font-weight: 700;
+    color: #8492aa;
+}
+
+.control-buttons {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.control-buttons button {
+    width: 32px;
+    height: 32px;
+    border: 1px solid #e5ebfa;
+    background: #f0f4ff;
+    color: #6686d2;
+    border-radius: 8px;
+    font-size: 20px;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.control-buttons button:hover {
+    background: #dfe9ff;
+}
+
+.control-buttons span {
+    min-width: 20px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 700;
+    color: #354361;
+}
+
+.resource-name {
+    width: 45px;
+    border: 1px solid #e5eaf3;
+    background: white;
+    border-radius: 6px;
+    padding: 6px;
+    text-align: center;
+    font-weight: 700;
+    color: var(--ink);
+    font-size: 11px;
+}
+
+.process-name {
+    width: 65px;
+}
+
+.delete-row-btn {
+    border: 1px solid #f4dede;
+    background: #fff4f4;
+    color: #d87979;
+    padding: 6px 10px;
+    border-radius: 7px;
+    font-size: 10px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.delete-row-btn:hover {
+    background: #ffe7e7;
+}
+
+.delete-row-btn:disabled {
+    opacity: .4;
+    cursor: not-allowed;
+}
+
+#processTable input:focus,
+#totalInputs input:focus {
+    outline: none;
+    border-color: #88a4e6;
+    box-shadow: 0 0 0 3px #eaf0ff;
+}
+
+@media(max-width: 760px) {
+    .table-controls {
+        gap: 25px;
+    }
+
+    .control-group {
+        width: 100%;
+    }
+
+    .table-wrap {
+        overflow-x: auto;
+    }
+}
