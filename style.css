@@ -850,7 +850,8 @@ td:first-child {
 
 .order-inputs {
     display: flex;
-    gap: 9px
+    gap: 9px;
+    flex-wrap: wrap
 }
 
 .order-chip {
@@ -860,6 +861,21 @@ td:first-child {
     padding: 10px 14px;
     font-size: 11px;
     font-weight: 700
+}
+
+.order-control {
+    display: flex;
+    align-items: center;
+    gap: 10px
+}
+
+.order-control select {
+    border: 1px solid #dfe7f7;
+    border-radius: 6px;
+    background: #fff;
+    color: var(--ink);
+    padding: 5px 7px;
+    font: 600 11px 'DM Sans'
 }
 
 .callout {

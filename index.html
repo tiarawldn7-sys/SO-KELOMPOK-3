@@ -52,17 +52,17 @@
           <button class="primary-btn" data-goto="input">Mulai simulasi <span>→</span></button>
         </div>
         <div class="stat-grid">
-          <article class="stat-card"><div class="stat-top"><span>Total proses</span><span class="stat-icon blue">▤</span></div><strong id="statProcesses">5</strong><small>Proses dalam simulasi</small></article>
+          <article class="stat-card"><div class="stat-top"><span>Total proses</span><span class="stat-icon blue">▤</span></div><strong id="statProcesses">1</strong><small>Proses dalam simulasi</small></article>
           <article class="stat-card"><div class="stat-top"><span>Jenis resource</span><span class="stat-icon lilac">◈</span></div><strong id="statResources">3</strong><small>Resource tersedia</small></article>
-          <article class="stat-card"><div class="stat-top"><span>Resource tersedia</span><span class="stat-icon mint">⌁</span></div><strong id="statAvailable">3</strong><small>Total unit yang belum dialokasikan</small></article>
-          <article class="stat-card"><div class="stat-top"><span>Status sistem</span><span class="stat-icon peach">✓</span></div><strong class="status-text" id="statStatus">Aman</strong><small id="statStatusNote">Berdasarkan pemeriksaan awal</small></article>
+          <article class="stat-card"><div class="stat-top"><span>Resource tersedia</span><span class="stat-icon mint">⌁</span></div><strong id="statAvailable">22</strong><small>Total unit yang belum dialokasikan</small></article>
+          <article class="stat-card"><div class="stat-top"><span>Status sistem</span><span class="stat-icon peach">✓</span></div><strong class="status-text" id="statStatus">Belum diperiksa</strong><small id="statStatusNote">Jalankan metode avoidance untuk memeriksa state</small></article>
         </div>
         <div class="dashboard-grid">
           <article class="panel overview-panel">
             <div class="panel-heading"><div><p class="eyebrow">PENGENALAN</p><h3>Kenali tiga metode simulasi</h3></div><span class="soft-tag">3 metode</span></div>
             <div class="method-list">
               <button class="method-row" data-goto="prevention"><span class="method-symbol symbol-blue">⬡</span><span><b>Deadlock Prevention</b><small>Mencegah deadlock dengan memutus salah satu kondisi penyebabnya.</small></span><span class="row-arrow">↗</span></button>
-              <button class="method-row" data-goto="avoidance"><span class="method-symbol symbol-mint">◇</span><span><b>Deadlock Avoidance</b><small>Memeriksa keamanan sistem sebelum resource dialokasikan.</small></span><span class="row-arrow">↗</span></button>
+              <button class="method-row" data-goto="avoidance"><span class="method-symbol symbol-mint">◇</span><span><b>Deadlock Avoidance</b><small>Memeriksa safe state dari data alokasi dan kebutuhan maksimum.</small></span><span class="row-arrow">↗</span></button>
               <button class="method-row" data-goto="detection"><span class="method-symbol symbol-peach">⌕</span><span><b>Deadlock Detection</b><small>Mencari proses yang terjebak setelah resource dialokasikan.</small></span><span class="row-arrow">↗</span></button>
             </div>
           </article>
@@ -178,12 +178,12 @@
         <div class="page-intro"><p class="eyebrow">METODE 01</p><h2>Deadlock Prevention</h2><p class="muted">Pencegahan dilakukan dengan memastikan setidaknya satu dari empat kondisi deadlock tidak terpenuhi.</p></div>
         <div class="two-col">
           <article class="panel"><p class="eyebrow">KONDISI DEADLOCK</p><h3>Empat kondisi Coffman</h3><div class="condition-list"><div><span>01</span><b>Mutual exclusion</b><small>Resource hanya dapat digunakan satu proses pada satu waktu.</small></div><div><span>02</span><b>Hold and wait</b><small>Proses menahan resource sambil menunggu resource lain.</small></div><div><span>03</span><b>No preemption</b><small>Resource tidak dapat diambil paksa dari proses.</small></div><div><span>04</span><b>Circular wait</b><small>Terbentuk rantai proses yang saling menunggu secara melingkar.</small></div></div></article>
-          <article class="panel"><p class="eyebrow">SIMULASI PENCEGAHAN</p><h3>Terapkan aturan urutan resource</h3><p class="muted">Salah satu cara mencegah circular wait adalah mewajibkan proses meminta resource berdasarkan urutan yang konsisten.</p><label class="field-label">Urutan resource yang diwajibkan</label><div id="orderInputs" class="order-inputs"></div><div class="callout">Contoh: proses harus meminta A sebelum B, dan B sebelum C. Proses tidak boleh meminta resource dengan urutan lebih rendah setelah memegang urutan lebih tinggi.</div><button class="primary-btn full" id="runPrevention">Jalankan pencegahan</button><div id="preventionResult" class="result-box empty">Jalankan simulasi untuk melihat hasil pemeriksaan aturan.</div></article>
+          <article class="panel"><p class="eyebrow">SIMULASI PENCEGAHAN</p><h3>Terapkan aturan urutan resource</h3><p class="muted">Salah satu cara mencegah circular wait adalah mewajibkan proses meminta resource berdasarkan urutan yang konsisten.</p><label class="field-label">Urutan resource yang diwajibkan</label><div id="orderInputs" class="order-inputs"></div><div class="callout">Contoh: proses harus meminta A sebelum B, dan B sebelum C. Proses tidak boleh meminta resource dengan urutan lebih rendah setelah memegang urutan lebih tinggi. Pemeriksaan memakai Allocation dan Request yang sedang diinput.</div><button class="primary-btn full" id="runPrevention">Jalankan pencegahan</button><div id="preventionResult" class="result-box empty">Jalankan simulasi untuk melihat hasil pemeriksaan aturan.</div></article>
         </div>
       </section>
 
       <section class="page" id="page-avoidance">
-        <div class="page-intro"><p class="eyebrow">METODE 02</p><h2>Deadlock Avoidance</h2><p class="muted">Banker's Algorithm memeriksa apakah sistem masih memiliki urutan penyelesaian yang aman sebelum memberikan resource.</p></div>
+        <div class="page-intro"><p class="eyebrow">METODE 02</p><h2>Deadlock Avoidance</h2><p class="muted">Banker's Algorithm memeriksa apakah keadaan alokasi dan kebutuhan maksimum yang diinput memiliki safe sequence. Simulator ini tidak mengajukan permintaan resource baru secara hipotetis.</p></div>
         <div class="panel"><div class="panel-heading"><div><p class="eyebrow">BANKER'S ALGORITHM</p><h3>Ringkasan resource</h3></div><button class="primary-btn" id="runAvoidance">Jalankan algoritma <span>→</span></button></div><div id="bankerSummary" class="banker-summary"></div><div class="table-wrap"><table id="needTable"></table></div><div id="avoidanceResult" class="result-box empty">Klik “Jalankan algoritma” untuk memeriksa safe sequence.</div></div>
       </section>
 
